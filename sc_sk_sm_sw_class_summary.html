@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>sc / sk / sm / sw — Class Summary</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: #f5f4f0; color: #2d2d2d; padding: 32px 20px; }
+  .page { max-width: 780px; margin: 0 auto; }
+
+  .lang-toggle { display: flex; justify-content: flex-end; margin-bottom: 16px; }
+  .lang-btn { display: flex; background: #fff; border-radius: 24px; padding: 4px; box-shadow: 0 1px 4px rgba(0,0,0,0.12); gap: 2px; }
+  .lang-btn button { border: none; cursor: pointer; padding: 7px 20px; border-radius: 20px; font-size: 0.82rem; font-weight: 600; background: transparent; color: #888; transition: all 0.18s; }
+  .lang-btn button.active { background: #2d2d2d; color: #fff; }
+
+  .header { background: #2d2d2d; color: #fff; border-radius: 14px; padding: 28px 32px; margin-bottom: 28px; }
+  .header h1 { font-size: 1.6rem; font-weight: 700; letter-spacing: -0.3px; margin-bottom: 14px; }
+  .header h1 span { color: #ffc94d; }
+  .meta-row { display: flex; flex-wrap: wrap; gap: 10px; }
+  .meta-chip { background: rgba(255,255,255,0.12); border-radius: 20px; padding: 4px 14px; font-size: 0.8rem; font-weight: 500; }
+
+  .timeline { display: flex; border-radius: 10px; overflow: hidden; margin-bottom: 28px; height: 10px; }
+  .tl-seg { height: 100%; }
+
+  .block { background: #fff; border-radius: 14px; margin-bottom: 16px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.07); }
+  .block-header { display: flex; align-items: center; gap: 14px; padding: 16px 22px; border-bottom: 1px solid #f0eeea; }
+  .block-num { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; color: #fff; flex-shrink: 0; }
+  .block-meta { flex: 1; }
+  .block-title { font-weight: 700; font-size: 1rem; }
+  .block-time { font-size: 0.78rem; color: #888; margin-top: 1px; }
+  .block-badge { font-size: 0.72rem; font-weight: 600; padding: 3px 10px; border-radius: 12px; white-space: nowrap; }
+  .block-body { padding: 18px 22px; }
+  .game-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; }
+  .game-name { font-size: 1.05rem; font-weight: 700; margin-bottom: 10px; }
+  .description { font-size: 0.875rem; line-height: 1.7; color: #444; }
+
+  .digraph-title { font-size: 0.85rem; font-weight: 700; margin-top: 16px; margin-bottom: 6px; }
+  .pairs-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
+  .pair-chip { background: #f5f4f0; border-radius: 8px; padding: 5px 12px; font-size: 0.82rem; font-weight: 600; font-family: monospace; white-space: nowrap; }
+
+  .sentence-list { margin-top: 14px; list-style: none; }
+  .sentence-list li { font-size: 0.875rem; padding: 7px 12px; border-radius: 8px; margin-bottom: 5px; background: #f9f8f5; display: flex; align-items: flex-start; gap: 8px; }
+  .sentence-list li::before { content: '→'; flex-shrink: 0; color: #bbb; font-size: 0.8rem; margin-top: 1px; }
+
+  .home-list { margin-top: 10px; list-style: none; }
+  .home-list li { font-size: 0.875rem; padding: 8px 12px; border-radius: 8px; margin-bottom: 6px; background: #f9f8f5; display: flex; align-items: flex-start; gap: 8px; }
+  .home-list li::before { content: '🏠'; flex-shrink: 0; font-size: 0.85rem; }
+
+  .fill-line { display: inline-block; min-width: 200px; border-bottom: 1px dashed #bbb; padding: 2px 4px; }
+
+  .tip { margin-top: 12px; padding: 10px 14px; border-radius: 8px; font-size: 0.82rem; line-height: 1.5; border-left: 3px solid; }
+
+  .b1 .block-num { background: #f5a623; } .b1 .block-badge { background: #fff4e0; color: #c47a00; } .b1 .game-label, .b1 .game-name { color: #c47a00; } .tl-b1 { background: #f5a623; flex: 15; }
+  .b2 .block-num { background: #3aada6; } .b2 .block-badge { background: #e4f5f4; color: #1f7f79; } .b2 .game-label, .b2 .game-name, .b2 .digraph-title { color: #1f7f79; } .tl-b2 { background: #3aada6; flex: 30; }
+  .b3 .block-num { background: #52b369; } .b3 .block-badge { background: #e9f7ed; color: #2d7d42; } .b3 .game-label, .b3 .game-name { color: #2d7d42; } .tl-b3 { background: #52b369; flex: 10; }
+  .b4 .block-num { background: #8a63d2; } .b4 .block-badge { background: #f1ecfb; color: #5c3aaa; } .b4 .game-label, .b4 .game-name { color: #5c3aaa; } .tl-b4 { background: #8a63d2; flex: 10; }
+  .b5 .block-num { background: #e05a6a; } .b5 .block-badge { background: #fdeef0; color: #b02535; } .b5 .game-label, .b5 .game-name { color: #b02535; } .tl-b5 { background: #e05a6a; flex: 20; }
+  .b6 .block-num { background: #d4a017; } .b6 .block-badge { background: #fdf6e0; color: #9a7010; } .b6 .game-label, .b6 .game-name { color: #9a7010; } .tl-b6 { background: #d4a017; flex: 5; }
+
+  .footer { text-align: center; font-size: 0.75rem; color: #aaa; margin-top: 28px; }
+
+  [data-lang] { display: none; }
+  body.lang-en [data-lang="en"] { display: revert; }
+  body.lang-zh [data-lang="zh"] { display: revert; }
+  span[data-lang] { display: none; }
+  body.lang-en span[data-lang="en"] { display: inline; }
+  body.lang-zh span[data-lang="zh"] { display: inline; }
+
+  @media print { body { background: #fff; padding: 0; } .block { box-shadow: none; border: 1px solid #eee; } .lang-toggle { display: none; } }
+</style>
+</head>
+<body class="lang-en">
+<div class="page">
+
+  <div class="lang-toggle">
+    <div class="lang-btn">
+      <button id="btn-en" class="active" onclick="setLang('en')">English</button>
+      <button id="btn-zh" onclick="setLang('zh')">中文</button>
+    </div>
+  </div>
+
+  <div class="header">
+    <h1>
+      <span data-lang="en">sc / sk / sm / sw — <span style="color:#ffc94d">Class Summary</span></span>
+      <span data-lang="zh">sc / sk / sm / sw — <span style="color:#ffc94d">課堂回顧</span></span>
+    </h1>
+    <div class="meta-row">
+      <span class="meta-chip">⏱ 90 <span data-lang="en">min</span><span data-lang="zh">分鐘</span></span>
+      <span class="meta-chip">👶 <span data-lang="en">Age</span><span data-lang="zh">年齡</span> 4–6</span>
+      <span class="meta-chip">🔁 <span data-lang="en">Review: st·sn·sp</span><span data-lang="zh">複習：st·sn·sp</span></span>
+      <span class="meta-chip">🆕 <span data-lang="en">New sounds: sc·sk·sm·sw</span><span data-lang="zh">新學：sc·sk·sm·sw</span></span>
+      <span class="meta-chip">📍 Tyson &amp; Keira</span>
+    </div>
+  </div>
+
+  <div class="timeline">
+    <div class="tl-seg tl-b1"></div>
+    <div class="tl-seg tl-b2"></div>
+    <div class="tl-seg tl-b3"></div>
+    <div class="tl-seg tl-b4"></div>
+    <div class="tl-seg tl-b5"></div>
+    <div class="tl-seg tl-b6"></div>
+  </div>
+
+  <!-- Block 1 -->
+  <div class="block b1">
+    <div class="block-header">
+      <div class="block-num">1</div>
+      <div class="block-meta">
+        <div class="block-title"><span data-lang="en">Warm-up + Quick Review</span><span data-lang="zh">暖身 + 快速複習</span></div>
+        <div class="block-time">15 <span data-lang="en">min</span><span data-lang="zh">分鐘</span></div>
+      </div>
+      <span class="block-badge"><span data-lang="en">Review</span><span data-lang="zh">複習</span></span>
+    </div>
+    <div class="block-body">
+      <p class="description">
+        <span data-lang="en">A quick chat about st/sn/sp, then a fast pass through those 15 word cards to keep them fresh before moving to new material.</span>
+        <span data-lang="zh">先簡短聊聊 st/sn/sp，接著快速複習那15張單字卡，在進入新內容前保持印象。</span>
+      </p>
+    </div>
+  </div>
+
+  <!-- Block 2 -->
+  <div class="block b2">
+    <div class="block-header">
+      <div class="block-num">2</div>
+      <div class="block-meta">
+        <div class="block-title"><span data-lang="en">New Sounds: sc / sk / sm / sw</span><span data-lang="zh">新學發音：sc / sk / sm / sw</span></div>
+        <div class="block-time">30 <span data-lang="en">min</span><span data-lang="zh">分鐘</span></div>
+      </div>
+      <span class="block-badge"><span data-lang="en">Main Lesson</span><span data-lang="zh">主要課程</span></span>
+    </div>
+    <div class="block-body">
+      <p class="description">
+        <span data-lang="en">Today's focus was the last four s-blends, completing the full family started with st/sn/sp:</span>
+        <span data-lang="zh">今天的重點是最後四組 s-blends，完成從 st/sn/sp 開始的整個家族：</span>
+      </p>
+      <div class="pairs-grid" style="margin-top:10px;">
+        <span class="pair-chip">sc</span><span class="pair-chip">sk</span><span class="pair-chip">sm</span><span class="pair-chip">sw</span>
+      </div>
+
+      <div class="digraph-title">sc — <span data-lang="en">scab, scan, scarf, scale, scoop</span><span data-lang="zh">scab、scan、scarf、scale、scoop</span></div>
+      <div class="pairs-grid"><span class="pair-chip">scab</span><span class="pair-chip">scan</span><span class="pair-chip">scarf</span><span class="pair-chip">scale</span><span class="pair-chip">scoop</span></div>
+
+      <div class="digraph-title">sk — <span data-lang="en">skate, skip, sky, skin, skirt</span><span data-lang="zh">skate、skip、sky、skin、skirt</span></div>
+      <div class="pairs-grid"><span class="pair-chip">skate</span><span class="pair-chip">skip</span><span class="pair-chip">sky</span><span class="pair-chip">skin</span><span class="pair-chip">skirt</span></div>
+
+      <div class="digraph-title">sm — <span data-lang="en">smile, smell, small, smoke, smash</span><span data-lang="zh">smile、smell、small、smoke、smash</span></div>
+      <div class="pairs-grid"><span class="pair-chip">smile</span><span class="pair-chip">smell</span><span class="pair-chip">small</span><span class="pair-chip">smoke</span><span class="pair-chip">smash</span></div>
+
+      <div class="digraph-title">sw — <span data-lang="en">swim, swing, sweet, swan, sweep</span><span data-lang="zh">swim、swing、sweet、swan、sweep</span></div>
+      <div class="pairs-grid"><span class="pair-chip">swim</span><span class="pair-chip">swing</span><span class="pair-chip">sweet</span><span class="pair-chip">swan</span><span class="pair-chip">sweep</span></div>
+
+      <div class="game-label" style="margin-top:18px;"><span data-lang="en">Game</span><span data-lang="zh">遊戲</span></div>
+      <div class="game-name"><span data-lang="en">Sound Sort</span><span data-lang="zh">聲音分類</span></div>
+      <p class="description">
+        <span data-lang="en">All 20 word cards were shuffled together. The child flipped each one, read the word aloud, and sorted it under the right blend — the biggest sorting challenge yet, with four categories!</span>
+        <span data-lang="zh">把20張單字卡洗在一起。孩子一張一張翻開，唸出單字，再分類放到正確的混合音底下——四個分類，是目前為止最有挑戰性的一次！</span>
+      </p>
+    </div>
+  </div>
+
+  <!-- Block 3 -->
+  <div class="block b3">
+    <div class="block-header">
+      <div class="block-num">3</div>
+      <div class="block-meta">
+        <div class="block-title"><span data-lang="en">Sight Words Review</span><span data-lang="zh">常見字複習</span></div>
+        <div class="block-time">10 <span data-lang="en">min</span><span data-lang="zh">分鐘</span></div>
+      </div>
+      <span class="block-badge"><span data-lang="en">Review</span><span data-lang="zh">複習</span></span>
+    </div>
+    <div class="block-body">
+      <div class="game-label"><span data-lang="en">Game</span><span data-lang="zh">遊戲</span></div>
+      <div class="game-name"><span data-lang="en">Speed Flip / Musical Cards</span><span data-lang="zh">快閃字卡 / 音樂傳卡</span></div>
+      <p class="description">
+        <span data-lang="en">Reviewed the full sight word set built up so far — no new words this round, just consolidation.</span>
+        <span data-lang="zh">複習目前累積的所有常見字——這次沒有加新字，單純鞏固。</span>
+      </p>
+    </div>
+  </div>
+
+  <!-- Block 4 -->
+  <div class="block b4">
+    <div class="block-header">
+      <div class="block-num">4</div>
+      <div class="block-meta">
+        <div class="block-title"><span data-lang="en">Brain Break</span><span data-lang="zh">動腦休息</span></div>
+        <div class="block-time">10 <span data-lang="en">min</span><span data-lang="zh">分鐘</span></div>
+      </div>
+      <span class="block-badge"><span data-lang="en">Fun Break</span><span data-lang="zh">趣味休息</span></span>
+    </div>
+    <div class="block-body">
+      <div class="game-label"><span data-lang="en">Game</span><span data-lang="zh">遊戲</span></div>
+      <div class="game-name"><span data-lang="en">Animal Word Memory Match / Phonics Bingo</span><span data-lang="zh">動物單字記憶配對 / 自然發音賓果</span></div>
+      <p class="description">
+        <span data-lang="en">A change of pace from phonics before storytime — either matching animal word cards, or a quick round of Bingo with today's sc/sk/sm/sw words.</span>
+        <span data-lang="zh">故事時間前換個節奏——玩動物單字配對，或用今天的 sc/sk/sm/sw 單字快速玩一輪賓果。</span>
+      </p>
+    </div>
+  </div>
+
+  <!-- Block 5 -->
+  <div class="block b5">
+    <div class="block-header">
+      <div class="block-num">5</div>
+      <div class="block-meta">
+        <div class="block-title"><span data-lang="en">Storytime</span><span data-lang="zh">故事時間</span></div>
+        <div class="block-time">20 <span data-lang="en">min</span><span data-lang="zh">分鐘</span></div>
+      </div>
+      <span class="block-badge"><span data-lang="en">Reading</span><span data-lang="zh">閱讀</span></span>
+    </div>
+    <div class="block-body">
+      <div class="game-label"><span data-lang="en">Books</span><span data-lang="zh">書名</span></div>
+      <div class="game-name"><span class="fill-line">&nbsp;</span> &nbsp;&amp;&nbsp; <span class="fill-line">&nbsp;</span></div>
+      <p class="description">
+        <span data-lang="en">Extra time today for two books — cover predictions, a few familiar words pointed out along the way, and a favorite-part chat after each one.</span>
+        <span data-lang="zh">今天故事時間多留了一些時間讀兩本書——看封面猜猜看，閱讀時順手指出幾個已學過的單字，讀完後聊聊最喜歡的部分。</span>
+      </p>
+    </div>
+  </div>
+
+  <!-- Block 6 -->
+  <div class="block b6">
+    <div class="block-header">
+      <div class="block-num">6</div>
+      <div class="block-meta">
+        <div class="block-title"><span data-lang="en">How You Can Help at Home</span><span data-lang="zh">在家可以怎麼幫忙</span></div>
+        <div class="block-time"><span data-lang="en">Ongoing</span><span data-lang="zh">日常</span></div>
+      </div>
+      <span class="block-badge"><span data-lang="en">Take-home</span><span data-lang="zh">帶回家</span></span>
+    </div>
+    <div class="block-body">
+      <p class="description">
+        <span data-lang="en">With this session, all seven S-Blends are complete (sc, sk, sm, sn, sp, st, sw)! No pressure, no drilling — just a few relaxed ways to keep it all fresh:</span>
+        <span data-lang="zh">這堂課結束後，全部七組 S-Blends 都教完了（sc、sk、sm、sn、sp、st、sw）！不用刻意練習，用輕鬆的方式保持印象即可：</span>
+      </p>
+      <ul class="home-list">
+        <li><span data-lang="en">When reading together, point out any words that start with an s-blend and sound them out together.</span><span data-lang="zh">一起看書時，發現以 s-blend 開頭的字，一起唸出來。</span></li>
+        <li><span data-lang="en">Play "I hear a sound" — say a word and have them guess which s-blend it starts with.</span><span data-lang="zh">玩「我聽到什麼音」小遊戲——說一個單字，讓孩子猜是哪個 s-blend 開頭。</span></li>
+        <li><span data-lang="en">5 minutes of flash cards is plenty — keep it short and end on a win.</span><span data-lang="zh">字卡練習五分鐘就夠，保持簡短，並在孩子答對時結束。</span></li>
+      </ul>
+      <div class="tip">
+        <span data-lang="en">🌟 <strong>Today's favorite words:</strong> <span class="fill-line">&nbsp;</span></span>
+        <span data-lang="zh">🌟 <strong>今天最喜歡的單字：</strong> <span class="fill-line">&nbsp;</span></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span data-lang="en">sc / sk / sm / sw Class Summary · Tyson &amp; Keira · 2026</span>
+    <span data-lang="zh">sc / sk / sm / sw 課堂回顧 · Tyson &amp; Keira · 2026</span>
+  </div>
+
+</div>
+
+<script>
+  function setLang(lang) {
+    document.body.className = 'lang-' + lang;
+    document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+    document.getElementById('btn-zh').classList.toggle('active', lang === 'zh');
+  }
+</script>
+</body>
+</html>
